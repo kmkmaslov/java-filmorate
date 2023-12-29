@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
@@ -36,11 +37,12 @@ class FilmorateApplication {
 		assertFalse(FilmController.validate(film));
 	}
 
+
 	@Test
 	void invalidFilmDescription() {
 		Film film = Film.builder()
 				.name("dsfbsdfbbdfsdfb")
-				.description("1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 ")
+				.description("123456789".repeat(201))
 				.releaseDate(LocalDate.of(2222, 12, 22))
 				.duration(120)
 				.build();

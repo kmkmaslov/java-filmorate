@@ -26,7 +26,7 @@ public class FilmController {
     }
 
     @PostMapping(value = "/films")
-    public Film create(@Valid @RequestBody Film film) throws ValidationException {
+    public Film create(@Valid @RequestBody Film film) {
         boolean isCorrect = validate(film);
         if (!isCorrect) {
             throw new ValidationException();
@@ -59,7 +59,7 @@ public class FilmController {
     }
 
     @PutMapping(value = "/films")
-    public Film update(@Valid @RequestBody Film film) throws ValidationException {
+    public Film update(@Valid @RequestBody Film film) {
         int filmId = film.getId();
         if (!films.containsKey(filmId)) {
             log.debug("нет фильма с таким id: {}", filmId);

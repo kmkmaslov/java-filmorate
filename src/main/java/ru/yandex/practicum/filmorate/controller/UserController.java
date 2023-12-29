@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/users")
-    public User create(@Valid @RequestBody User user) throws ValidationException {
+    public User create(@Valid @RequestBody User user) {
         boolean isCorrect = validate(user);
         if (!isCorrect) {
             throw new ValidationException();
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/users")
-    public User update(@Valid @RequestBody User user) throws ValidationException {
+    public User update(@Valid @RequestBody User user) {
         int userId = user.getId();
         if (!users.containsKey(userId)) {
             log.debug("Не найден, {}", userId);
