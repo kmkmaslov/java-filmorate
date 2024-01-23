@@ -11,10 +11,12 @@ import java.util.List;
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final UserService userService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, UserService userService) {
         this.filmStorage = filmStorage;
+        this.userService = userService;
     }
 
     public List<Film> get() {
@@ -33,11 +35,17 @@ public class FilmService {
         return filmStorage.getFilmById(filmId);
     }
 
-    public void addLike(Integer filmId) {
-        filmStorage.addLike(filmId);
+    public void addLike(Integer filmId, Integer userId) {
+        //userService.getUserById(userId);
+        filmStorage.addLike(filmId, userId);
     }
 
-    public void deleteLike(Integer filmId) {
-        filmStorage.deleteLike(filmId);
+    public void deleteLike(Integer filmId, Integer userId) {
+        //userService.getUserById(userId);
+        filmStorage.deleteLike(filmId, userId);
+    }
+
+    public List<Film> getPopularFilms(Integer count) {
+        return filmStorage.getPopularFilms(count);
     }
 }
