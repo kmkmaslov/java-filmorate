@@ -72,7 +72,11 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(Integer userId) {
-        return null;
+        if (users.containsKey(userId)) {
+            return users.get(userId);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
