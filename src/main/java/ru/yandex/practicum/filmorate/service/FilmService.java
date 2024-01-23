@@ -36,12 +36,12 @@ public class FilmService {
     }
 
     public void addLike(Integer filmId, Integer userId) {
-        //userService.getUserById(userId);
+        userService.getUserById(userId);
         filmStorage.addLike(filmId, userId);
     }
 
     public void deleteLike(Integer filmId, Integer userId) {
-        //userService.getUserById(userId);
+        userService.getUserById(userId);
         filmStorage.deleteLike(filmId, userId);
     }
 
