@@ -97,6 +97,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private int compare(Film f0, Film f1) {
         return f1.getLikesByUsers().size() - f0.getLikesByUsers().size();
     }
+
     @Override
     public List<Film> getPopularFilms(Integer count) {
         return films.values().stream()
@@ -104,6 +105,5 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .limit(count)
                 .collect(Collectors.toList());
     }
-
 
 }
