@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -66,6 +65,30 @@ class UserControllerTest {
     void getListWithUser() {
         controller.create(user);
         List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+    }
+
+    @Test
+    void userWithInvalidEmail() {
+        Throwable thrown = catchThrowable(() -> controller.create(invalidEmail));
+        assertThat(thrown).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void userWithInvalidLogin() {
+        Throwable thrown = catchThrowable(() -> controller.create(invalidLogin));
+        assertThat(thrown).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void userWithoutError() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        user.setName("adsadg dasgsdg");
+        controller.update(user);
         assertNotNull(users);
         assertEquals(1, users.size());
     }

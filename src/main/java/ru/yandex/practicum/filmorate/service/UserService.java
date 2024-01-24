@@ -33,5 +33,10 @@ public class UserService {
         return userStorage.getUserById(userId);
     }
 
+    public List<User> getFriends(Integer userId) {
+        return userStorage.getFriends(userId);
+    }
+
+
 
 }

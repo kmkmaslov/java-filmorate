@@ -17,7 +17,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    @ResponseBody
     public List<User> get() {
         return userService.get();
     }
@@ -30,6 +29,16 @@ public class UserController {
     @PutMapping(value = "/users")
     public User update(@Valid @RequestBody User user) {
         return userService.update(user);
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable("id") Integer userId) {
+        return userService.getUserById(userId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriends(@PathVariable("id") Integer userId) {
+        return getFriends(userId);
     }
 
 }
