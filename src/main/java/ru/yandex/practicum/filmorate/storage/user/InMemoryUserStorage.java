@@ -63,7 +63,7 @@ public class InMemoryUserStorage implements UserStorage {
         int userId = user.getId();
         if (!users.containsKey(userId)) {
             log.debug("Не найден, {}", userId);
-            throw new ValidationException();
+            throw new NotFoundException();
         }
         if (user.getFriends() == null) {
             user.setFriends(new HashSet<>());
