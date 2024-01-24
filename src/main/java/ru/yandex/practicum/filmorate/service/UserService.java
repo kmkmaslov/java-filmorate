@@ -37,6 +37,15 @@ public class UserService {
         return userStorage.getFriends(userId);
     }
 
+    public List<User> addToFriends(Integer userId, Integer friendId) {
+        return userStorage.addToFriends(userId, friendId);
+    }
 
+    public void deleteFromFriends(Integer userId, Integer friendId) {
+        userStorage.deleteFromFriends(userId, friendId);
+    }
 
+    public List<User> getCommonFriends(Integer userId, Integer friendId) {
+        return userStorage.getCommonFriends(userId, friendId);
+    }
 }

@@ -23,29 +23,25 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values().parallelStream().collect(Collectors.toList());
     }
 
-    public static boolean validate(User user) {
+    public static void validate(User user) {
         String email = user.getEmail();
         String login = user.getLogin();
         LocalDate birthday = user.getBirthday();
         if (email == null || !email.contains("@")) {
             log.debug("Электронная почта не указана или не указан символ '@'");
-            return false;
+            throw new ValidationException();
         } else if (login == null || login.isEmpty() || login.contains(" ")) {
             log.debug("Логин пользователя с электронной почтой {} не указан или содержит пробел", email);
-            return false;
+            throw new ValidationException();
         } else if (birthday.isAfter(LocalDate.now())) {
             log.debug("Дата рождения пользователя с логином {} указана будущим числом", login);
-            return false;
+            throw new ValidationException();
         }
-        return true;
     }
 
     @Override
     public User create(User user) {
-        boolean isCorrect = validate(user);
-        if (!isCorrect) {
-            throw new ValidationException();
-        }
+        validate(user);
         String name = user.getName();
         String login = user.getLogin();
         if (name == null || name.isEmpty()) {
@@ -53,6 +49,9 @@ public class InMemoryUserStorage implements UserStorage {
             log.debug("новое имя {} для {}", user.getName(), login);
         }
         user.setId(++this.id);
+        if (user.getFriends() == null) {
+            user.setFriends(new HashSet<>());
+        }
         users.put(user.getId(), user);
         log.debug("новый пользователь: {}", user);
         return user;
@@ -60,10 +59,14 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User update(User user) {
+        validate(user);
         int userId = user.getId();
         if (!users.containsKey(userId)) {
             log.debug("Не найден, {}", userId);
             throw new ValidationException();
+        }
+        if (user.getFriends() == null) {
+            user.setFriends(new HashSet<>());
         }
         users.put(userId, user);
         log.debug("данные {} для {} обновлены", user, userId);
@@ -81,12 +84,24 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> addToFriends(Integer userId, Integer friendId) {
-        return null;
+        User user = getUserById(userId);
+        User friend = getUserById(friendId);
+        user.addFriend(friendId);
+        friend.addFriend(userId);
+        update(user);
+        update(friend);
+        Set<Integer> friendsId = user.getFriends();
+        List<User> friends = new ArrayList<>();
+        for (Integer id : friendsId) {
+            friends.add(getUserById(id));
+        }
+        return friends;
     }
 
     @Override
     public void deleteFromFriends(Integer userId, Integer friendId) {
-
+        User user = getUserById(userId);
+        user.deleteFromFriends(friendId);
     }
 
     @Override
@@ -102,6 +117,15 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
-        return null;
+        List<User> friends = new ArrayList<>();
+        User user = getUserById(userId);
+        Set<Integer> userFriendsId = user.getFriends();
+        User friend = getUserById(friendId);
+        Set<Integer> friendsId = friend.getFriends();
+        List<Integer> commonId = userFriendsId.stream().filter(friendsId::contains).collect(Collectors.toList());
+        for (Integer id : commonId) {
+            friends.add(getUserById(id));
+        }
+        return friends;
     }
 }
