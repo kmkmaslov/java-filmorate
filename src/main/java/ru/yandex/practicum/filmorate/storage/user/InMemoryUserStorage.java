@@ -20,7 +20,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> get() {
         log.debug("количество пользователей: {}", users.size());
-        return users.values().parallelStream().collect(Collectors.toList());
+        return users.values().stream().collect(Collectors.toList());
     }
 
     public static void validate(User user) {
@@ -101,7 +101,11 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void deleteFromFriends(Integer userId, Integer friendId) {
         User user = getUserById(userId);
+        User friend = getUserById(friendId);
         user.deleteFromFriends(friendId);
+        friend.deleteFromFriends(userId);
+        update(user);
+        update(friend);
     }
 
     @Override

@@ -7,10 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,7 +20,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public List<Film> get() {
         log.debug("количество фильмов: {}", films.size());
-        return films.values().parallelStream().collect(Collectors.toList());
+        return new ArrayList<>(films.values());
     }
 
     @Override
