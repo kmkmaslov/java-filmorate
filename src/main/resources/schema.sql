@@ -1,18 +1,18 @@
-create table PUBLIC._GENRES
+create table IF NOT EXISTS PUBLIC._GENRES
 (
     ID   INTEGER auto_increment
         primary key,
     NAME CHARACTER VARYING(100)
 );
 
-create table PUBLIC._RATINGS
+create table IF NOT EXISTS PUBLIC._RATINGS
 (
     ID   INTEGER auto_increment
         primary key,
     NAME CHARACTER VARYING(100)
 );
 
-create table PUBLIC._FILMS
+create table IF NOT EXISTS PUBLIC._FILMS
 (
     ID           INTEGER auto_increment
         primary key,
@@ -24,7 +24,7 @@ create table PUBLIC._FILMS
         references PUBLIC._RATINGS
 );
 
-create table PUBLIC._FILM_GENRES
+create table IF NOT EXISTS PUBLIC._FILM_GENRES
 (
     FILM_ID  INTEGER
         references PUBLIC._FILMS,
@@ -32,7 +32,7 @@ create table PUBLIC._FILM_GENRES
         references PUBLIC._GENRES
 );
 
-create table PUBLIC._USERS
+create table IF NOT EXISTS PUBLIC._USERS
 (
     ID       INTEGER auto_increment
         primary key,
@@ -42,7 +42,7 @@ create table PUBLIC._USERS
     BIRTHDAY DATE
 );
 
-create table PUBLIC._FRIENDSHIPS
+create table IF NOT EXISTS PUBLIC._FRIENDSHIPS
 (
     USER_ID   INTEGER
         references PUBLIC._USERS,
@@ -51,7 +51,7 @@ create table PUBLIC._FRIENDSHIPS
     STATUS    BOOLEAN
 );
 
-create table PUBLIC._LIKES
+create table IF NOT EXISTS PUBLIC._LIKES
 (
     FILM_ID INTEGER
         references PUBLIC._FILMS,
