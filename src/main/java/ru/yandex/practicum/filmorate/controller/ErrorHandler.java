@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
