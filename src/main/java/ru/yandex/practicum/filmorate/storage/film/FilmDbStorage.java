@@ -4,12 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Slf4j
 @Component
@@ -23,12 +26,13 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public ArrayList get() {
+    public List<Film> get() {
         List<Film> films = new ArrayList<>();
-
+        String SQL = "select * from _FILMS";
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(SQL);
 
         log.debug("количество фильмов: {}", films.size());
-        return new ArrayList<>(films.size());
+        return films;
     }
 
     @Override

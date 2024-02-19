@@ -8,5 +8,5 @@ public interface GenreStorage {
 
     List<Genre> findAll();
 
-    Genre findGenreById(Integer ratingId);
+    Genre findGenreById(Integer genreId);
 }

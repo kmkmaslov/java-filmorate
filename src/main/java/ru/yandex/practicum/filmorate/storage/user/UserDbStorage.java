@@ -4,14 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -28,6 +27,9 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> get() {
         List<User> users = new ArrayList<>();
+        String sql = "select * from _USERS";
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sql);
+
 
         log.debug("количество пользователей: {}", users.size());
         return new ArrayList<>(users.size());
