@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +25,8 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public List<Genre> findAll() {
         List<Genre> genres = new ArrayList<>();
-        String SQL = "select * from _GENRES";
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(SQL);
+        String sql = "select * from _GENRES";
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sql);
         while (genreRows.next()) {
             genres.add(takeGenre(genreRows));
         }
@@ -37,8 +36,8 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Genre findGenreById(Integer genreId) {
-        String SQL = "select * from _GENRES where id = ?";
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(SQL, genreId);
+        String sql = "select * from _GENRES where id = ?";
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sql, genreId);
         if (genreRows.next()) {
             Genre genre = takeGenre(genreRows);
             log.info("Жанр: {}", genre);

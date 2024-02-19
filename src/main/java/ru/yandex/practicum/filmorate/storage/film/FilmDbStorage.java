@@ -28,8 +28,9 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> get() {
         List<Film> films = new ArrayList<>();
-        String SQL = "select * from _FILMS";
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(SQL);
+        String sql = "SELECT _FILMS.ID, _FILMS.NAME, _FILMS.DESCRIPTION, _FILMS.RELEASE_DATE, _FILMS.DURATION, " +
+                "_FILMS.RATING_ID, _FILMS.NAME FROM _FILMS LEFT JOIN _RATINGS ON _FILMS.RATING_ID = _RATINGS.ID";
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql);
 
         log.debug("количество фильмов: {}", films.size());
         return films;
