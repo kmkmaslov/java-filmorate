@@ -27,6 +27,10 @@ public class Film {
 
     private Set<Integer> likesByUsers;
 
+    private Set<Genre> genres;
+
+    private Rating mpaRating;
+
     public void addLike(Integer userId) {
         this.likesByUsers.add(userId);
     }
