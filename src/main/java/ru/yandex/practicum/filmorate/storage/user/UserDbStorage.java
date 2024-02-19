@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @Qualifier("userDbStorage")
-public class UserDbStorage {
+public class UserDbStorage implements UserStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -29,7 +30,7 @@ public class UserDbStorage {
         List<User> users = new ArrayList<>();
 
         log.debug("количество пользователей: {}", users.size());
-        return new ArrayList<>(users.values());
+        return new ArrayList<>(users.size());
     }
 
     @Override
@@ -42,7 +43,7 @@ public class UserDbStorage {
     @Override
     public User update(User user) {
 
-        log.debug("данные {} для {} обновлены", user.getId(), userId);
+        log.debug("данные {} для {} обновлены", user.getId(), user);
         return user;
     }
 

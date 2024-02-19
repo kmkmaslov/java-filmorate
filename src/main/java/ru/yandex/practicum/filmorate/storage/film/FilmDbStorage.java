@@ -14,7 +14,7 @@ import java.util.*;
 @Slf4j
 @Component
 @Qualifier("filmDbStorage")
-public class FilmDbStorage {
+public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -28,7 +28,7 @@ public class FilmDbStorage {
 
 
         log.debug("количество фильмов: {}", films.size());
-        return new ArrayList<>(films.values());
+        return new ArrayList<>(films.size());
     }
 
     @Override
