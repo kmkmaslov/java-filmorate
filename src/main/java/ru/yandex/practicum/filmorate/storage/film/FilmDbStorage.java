@@ -154,32 +154,26 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(new HashSet<>());
         }
         int filmId = film.getId();
-        String sqlQuery = "update films set " +
-                "name = ?, description = ?, release_date = ?, duration = ?, rating_id = ?" +
-                "where id = ?";
-        int totalUpdate = jdbcTemplate.update(sqlQuery
-                , film.getName()
-                , film.getDescription()
-                , film.getReleaseDate()
-                , film.getDuration()
-                , film.getMpa().getId()
-                , filmId);
+
+        String sqlQuery = "update films set name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? where id = ?";
+        int totalUpdate = jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId(), filmId);
         if (totalUpdate == 0) {
             throw new NotFoundException();
         }
+
         sqlQuery = "delete from likes where film_id = ? ";
         jdbcTemplate.update(sqlQuery, filmId);
         addFilmLikes(film);
+
         sqlQuery = "delete from film_genres where film_id = ? ";
         jdbcTemplate.update(sqlQuery, filmId);
         addFilmGenres(film);
-        log.info("Обновлено записей: {}", totalUpdate);
+        log.info("записи обновлены: {}", totalUpdate);
         return getFilmById(filmId);
     }
 
     private void addFilmGenres(Film film) {
-        String sqlQuery = "insert into film_genres (film_id, genre_id) " +
-                "values (?, ?)";
+        String sqlQuery = "insert into film_genres (film_id, genre_id) values (?, ?)";
         int filmId = film.getId();
         Set<Genre> genres = film.getGenres();
         for (Genre genre : genres) {
@@ -213,10 +207,10 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, filmId);
         if (filmRows.next()) {
             Film film = takeFilm(filmRows);
-            log.info("Найден фильм в базе: {}", film);
+            log.info("Фильм: {}", film);
             return film;
         } else {
-            log.info("В списке отсутствует фильм с id: {}", filmId);
+            log.info("Нет фильма с id: {}", filmId);
             throw new NotFoundException();
         }
     }
@@ -247,7 +241,7 @@ public class FilmDbStorage implements FilmStorage {
         while (filmRows.next()) {
             films.add(takeFilm(filmRows));
         }
-        log.info("Количество популярных фильмов: {}", films.size());
+        log.info("популярных фильмов: {}", films.size());
         return films;
     }
 
