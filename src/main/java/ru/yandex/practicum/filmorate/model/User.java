@@ -7,7 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.Map;
 
 @Data
 @Builder
@@ -22,11 +22,10 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-
-    private Set<Integer> friends;
+    private Map<Integer, Boolean> friends;
 
     public void addFriend(Integer friendId) {
-        this.friends.add(friendId);
+        this.friends.put(friendId, false);
     }
 
     public void deleteFromFriends(Integer friendId) {
