@@ -25,7 +25,7 @@ public class RatingDbStorage implements RatingStorage {
     @Override
     public List<Rating> findAll() {
         List<Rating> ratings = new ArrayList<>();
-        String sql = "select * from _RATINGS";
+        String sql = "select * from ratings";
         SqlRowSet ratingRows = jdbcTemplate.queryForRowSet(sql);
         while (ratingRows.next()) {
             ratings.add(takeRating(ratingRows));
@@ -36,7 +36,7 @@ public class RatingDbStorage implements RatingStorage {
 
     @Override
     public Rating findRatingById(Integer ratingId) {
-        String sql = "select * from _RATINGS where id = ?";
+        String sql = "select * from ratings where id = ?";
         SqlRowSet ratingRows = jdbcTemplate.queryForRowSet(sql, ratingId);
         if (ratingRows.next()) {
             Rating rating = takeRating(ratingRows);

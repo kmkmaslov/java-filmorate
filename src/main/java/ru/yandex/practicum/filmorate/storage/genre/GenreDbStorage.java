@@ -25,7 +25,7 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public List<Genre> findAll() {
         List<Genre> genres = new ArrayList<>();
-        String sql = "select * from _GENRES";
+        String sql = "select * from genres";
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sql);
         while (genreRows.next()) {
             genres.add(takeGenre(genreRows));
@@ -36,7 +36,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Genre findGenreById(Integer genreId) {
-        String sql = "select * from _GENRES where id = ?";
+        String sql = "select * from genres where id = ?";
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sql, genreId);
         if (genreRows.next()) {
             Genre genre = takeGenre(genreRows);
