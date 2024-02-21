@@ -1,4 +1,5 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-Branch controllers-films-users added
+DB scheme added 
+![scheme.png](src%2Fmain%2Fresources%2Fscheme.png)
