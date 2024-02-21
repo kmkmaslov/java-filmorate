@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
@@ -22,14 +23,15 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public List<Genre> findAll() {
-        List<Genre> genres = new ArrayList<>();
-        String sql = "select * from genres";
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sql);
-        while (genreRows.next()) {
-            genres.add(takeGenre(genreRows));
-        }
-        log.info("Количество фильмов с жанром: {}", genres.size());
-        return genres;
+        String sql = "SELECT * FROM genres";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> takeGenre2(rs));
+    }
+
+    private Genre takeGenre2(ResultSet rs) throws SQLException {
+        return Genre.builder()
+                .id(rs.getInt("id"))
+                .name(rs.getString("name"))
+                .build();
     }
 
     @Override
