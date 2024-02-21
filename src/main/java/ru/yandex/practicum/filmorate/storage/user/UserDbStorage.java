@@ -16,6 +16,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -33,14 +34,36 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> get() {
-        List<User> users = new ArrayList<>();
-        String sql = "select * from users";
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sql);
-        while (userRows.next()) {
-            users.add(makeUser(userRows));
-        }
-        log.debug("количество пользователей: {}", users.size());
+        String userSql = "SELECT * FROM users";
+        List<User> users = jdbcTemplate.query(userSql, (rs, rowNum) -> makeUser2(rs));
+        users.forEach(user -> user.setFriends(fetchFriendships(user.getId())));
         return users;
+    }
+
+    private User makeUser2(ResultSet rs) throws SQLException {
+        int userId = rs.getInt("id");
+        String email = rs.getString("email");
+        String login = rs.getString("login");
+        String name = rs.getString("name");
+        LocalDate birthday = rs.getDate("birthday").toLocalDate();
+        return User.builder()
+                .id(userId)
+                .email(email)
+                .login(login)
+                .name(name)
+                .birthday(birthday)
+                .build();
+    }
+
+    private Map<Integer, Boolean> fetchFriendships(int userId) {
+        Map<Integer, Boolean> friendships = new HashMap<>();
+        String friendshipSql = "SELECT friend_id, status FROM friendships WHERE user_id = ?";
+        jdbcTemplate.query(friendshipSql, rs -> {
+            int friendId = rs.getInt("friend_id");
+            boolean status = rs.getBoolean("status");
+            friendships.put(friendId, status);
+        }, userId);
+        return friendships;
     }
 
     private User makeUser(SqlRowSet userRows) {
