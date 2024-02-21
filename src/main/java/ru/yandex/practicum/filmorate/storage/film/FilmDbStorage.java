@@ -16,6 +16,7 @@ import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -33,17 +34,36 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> get() {
-        List<Film> films = new ArrayList<>();
         String sql = "SELECT films.ID, films.NAME, films.DESCRIPTION, films.RELEASE_DATE, films.DURATION, " +
-            "films.RATING_ID, ratings.NAME rating_name FROM films LEFT JOIN RATINGS ON films.RATING_ID = ratings.ID";
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql);
-        while (filmRows.next()) {
-            Film film = takeFilm(filmRows);
-            films.add(film);
+                "films.RATING_ID, ratings.NAME rating_name FROM films LEFT JOIN RATINGS ON films.RATING_ID = ratings.ID";
+
+        List<Film> films = jdbcTemplate.query(sql, (ResultSet rs, int rowNum) -> {
+            Film film = takeFilm2(rs);
             log.info("Добавлен фильм: {}", film);
-        }
+            return film;
+        });
+
         log.debug("количество фильмов: {}", films.size());
         return films;
+    }
+
+    private Film takeFilm2(ResultSet rs) throws SQLException {
+        int filmId = rs.getInt("ID");
+        String releaseDate = rs.getString("RELEASE_DATE");
+        Rating filmRating = Rating.builder()
+                .id(rs.getInt("RATING_ID"))
+                .name(rs.getString("RATING_NAME"))
+                .build();
+        return Film.builder()
+                .id(filmId)
+                .name(rs.getString("NAME"))
+                .description(rs.getString("DESCRIPTION"))
+                .releaseDate(LocalDate.parse(releaseDate))
+                .duration(rs.getLong("DURATION"))
+                .likesByUsers(getLikes(filmId))
+                .genres(getFilmGenre(filmId))
+                .mpa(filmRating)
+                .build();
     }
 
     private Film takeFilm(SqlRowSet filmRows) {
